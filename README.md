@@ -53,7 +53,7 @@ npm run preview
 ## CodespacesでPRを確認する
 
 1. PRの `Code` → `Codespaces` から、そのPRブランチのCodespaceを作成または開きます。
-2. Terminalで `npm run dev -- --host 0.0.0.0` を実行します。
+2. Terminalで `npm run dev` を実行します。
 3. `Ports` の5173から `Open in Browser` を選びます。
 4. Port visibilityが `Private` であることを確認します。
 
