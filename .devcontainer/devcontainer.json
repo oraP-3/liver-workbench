@@ -1,0 +1,13 @@
+{
+  "name": "Liver Workbench",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:1-22-bookworm",
+  "postCreateCommand": "npm ci",
+  "forwardPorts": [5173],
+  "portsAttributes": {
+    "5173": {
+      "label": "Liver Workbench",
+      "onAutoForward": "notify",
+      "visibility": "private"
+    }
+  }
+}
