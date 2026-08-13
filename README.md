@@ -49,3 +49,14 @@ MDF 32以上とプレドニゾロン40 mg/日・28日間は、国内Recommendati
 ```sh
 npm test
 ```
+
+## Webアプリ基盤
+
+React、TypeScript、Viteによるレスポンシブなアプリシェルを収録しています。現段階では入力・結果領域はプレースホルダーであり、臨床計算コアには接続していません。
+
+```sh
+npm install
+npm run dev
+```
+
+production buildはGitHub Pagesの `/liver-workbench/` 配下を基準に生成されます。PWAのservice workerはビルド時に生成され、アプリシェルをprecacheします。
