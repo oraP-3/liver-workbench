@@ -1,0 +1,99 @@
+{
+  "verifiedAt": "2026-08-13",
+  "displayPolicy": "診断・治療指示ではなく、国内ガイドライン等の記載と入力値の対応を表示する",
+  "modules": [
+    {
+      "id": "aih",
+      "title": "自己免疫性肝炎（AIH）診療ガイドライン",
+      "version": "2021年版",
+      "status": "adopted",
+      "publisher": "厚生労働省 難治性の肝・胆道疾患に関する調査研究班"
+    },
+    {
+      "id": "hcv",
+      "title": "C型肝炎治療ガイドライン",
+      "version": "第8.4版（2025年4月）",
+      "status": "adopted",
+      "publisher": "日本肝臓学会",
+      "url": "https://www.jsh.or.jp/medical/guidelines/jsh_guidlines/hepatitis_c.html"
+    },
+    {
+      "id": "hbv",
+      "title": "B型肝炎治療ガイドライン",
+      "version": "第5版（2026年6月）",
+      "status": "adopted",
+      "publisher": "日本肝臓学会",
+      "url": "https://www.jsh.or.jp/medical/guidelines/jsh_guidlines/hepatitis_b.html"
+    },
+    {
+      "id": "ald",
+      "title": "アルコール性肝障害（アルコール関連肝疾患）診療ガイド2022",
+      "version": "2022",
+      "status": "partially-adopted",
+      "publisher": "日本肝臓学会／文光堂",
+      "isbn": "978-4-8306-2113-0",
+      "url": "https://www.bunkodo.co.jp/book/SWEJT0BI0X.html",
+      "adoptedContent": [
+        "JAS（Japan Alcoholic Hepatitis Score）による重症アルコール性肝炎の重症度評価",
+        "MDF（Maddrey's discriminant function）の計算と、国内ガイド本文が引用するAASLD記載の区別表示",
+        "MELDによる予後評価",
+        "投与開始1週後のLille score（確認済み資料に判定閾値がないため計算値のみ）",
+        "ACLF病態で発症する重症アルコール性肝炎に対する副腎皮質ステロイド検討の国内Recommendation",
+        "ステロイドパルスと顆粒球単球吸着除去療法の併用は『有用との報告』として表示し、標準治療指示と区別",
+        "ACLF・重症アルコール性肝炎における人工肝補助療法のエビデンス未確立という本文記載",
+        "ALD診断では飲酒量評価を必要とし、補助として飲酒マーカーの使用を考慮する",
+        "非侵襲的線維化評価では血清マーカーおよびtransient elastographyが高度線維化診断に有用",
+        "検査値と臨床評価、または線維化マーカー間に乖離があれば肝生検を考慮する"
+      ],
+      "pendingContent": [
+        "アルコール使用障害への治療・飲酒量低減の記載"
+      ],
+      "provenancePolicy": [
+        "国内Recommendation",
+        "国内ガイド本文",
+        "国内ガイド本文が引用する海外ガイドライン",
+        "有用との報告"
+      ]
+    },
+    {
+      "id": "dili",
+      "title": "薬物性肝障害スコアリングシステム RECAM-J 2023",
+      "version": "2023（学会掲載2025年1月）",
+      "status": "adopted",
+      "publisher": "日本肝臓学会 薬物性肝障害ワーキンググループ",
+      "url": "https://www.jsh.or.jp/lib/files/medical/guidelines/medicalinfo/recam-j2023.xlsx"
+    },
+    {
+      "id": "ici-liver-injury",
+      "title": "免疫チェックポイント阻害薬による肝障害の診断・治療指針2025",
+      "version": "2025",
+      "status": "adopted-as-dili-adjunct",
+      "publisher": "日本肝臓学会",
+      "url": "https://www.jsh.or.jp/medical/guidelines/medicalinfo/shindan_chiryou.html"
+    },
+    {
+      "id": "acute-liver-failure",
+      "title": "急性肝不全・LOHFの国内診断基準および肝移植適応情報",
+      "version": "診断基準2011／移植適応ページ現行",
+      "status": "adopted-as-composite-source",
+      "publisher": "厚生労働省研究班／日本肝臓学会",
+      "url": "https://www.jsh.or.jp/medical/transplant/diagnosis/"
+    },
+    {
+      "id": "aclf",
+      "title": "わが国におけるACLF診断基準・重症度分類",
+      "version": "2022",
+      "status": "adopted",
+      "publisher": "厚生労働省研究班（『肝臓』63巻5号）",
+      "url": "https://www.jstage.jst.go.jp/article/kanzo/63/5/63_219/_pdf"
+    },
+    {
+      "id": "fib3",
+      "title": "Fibrosis-3 index",
+      "version": "原著2022／国内レビュー2026",
+      "status": "evidence-based-not-guideline-endorsed",
+      "publisher": "査読論文",
+      "note": "計算値は表示するが、ガイドライン推奨済みとは表示しない"
+    }
+  ]
+}
