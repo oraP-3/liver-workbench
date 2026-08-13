@@ -1,0 +1,3 @@
+import { describe,expect,it } from "vitest";
+import { emptyAssessment,emptyFacility,snapshotFacility,syncTiming } from "../../src/model";
+describe("longitudinal model",()=>{it("synchronizes calendar date and relative day both ways",()=>{const a=emptyAssessment();a.timing.absoluteDate="2026-08-20";expect(syncTiming(a,"2026-08-13","absoluteDate").timing.relativeDay).toBe(7);a.timing.relativeDay=7;expect(syncTiming(a,"2026-08-13","relativeDay").timing.absoluteDate).toBe("2026-08-20")});it("keeps facility snapshots immutable",()=>{const f={...emptyFacility(),name:"A",astUln:35};const snap=snapshotFacility(f)!;f.astUln=40;expect(snap.astUln).toBe(35)})});

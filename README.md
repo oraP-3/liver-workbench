@@ -1,4 +1,4 @@
-# Liver Workbench core 0.3
+# Liver Workbench 正式UI 第1段階
 
 オフライン肝疾患ガイドライン参照アプリの実装用コアです。画面モックではなく、正式アプリから呼び出す症例データ構造、経時点・薬剤歴、共通スコア計算、参照資料台帳を収録します。
 
@@ -34,7 +34,16 @@ JASは『アルコール性肝障害（アルコール関連肝疾患）診療�
 
 MDF 32以上とプレドニゾロン40 mg/日・28日間は、国内Recommendationそのものではなく、国内ガイド本文が紹介するAASLDガイドラインの記載として返します。ACLF病態で発症する重症アルコール性肝炎への副腎皮質ステロイド検討は国内Recommendationとして返します。Lilleは1週後評価の計算値を表示しますが、今回確認できた資料に判定閾値がないため自動解釈しません。
 
-## 次の実装順
+## Codespaces（Private port）
+
+1. PRの **Code → Codespaces** からPRブランチのCodespaceを作成または開きます。
+2. Terminalで `npm run dev -- --host 0.0.0.0` を実行します。
+3. **Ports** の5173から **Open in Browser** を選択します。
+4. Ports一覧の **Visibility** が **Private** であることを確認します。Publicへ変更しません。
+
+確認には明示的な「デモ症例を読み込む」操作で架空症例のみを使用してください。
+
+## 第2段階以降
 
 1. 現行HTMLの保存形式をschema v2へ移行
 2. 経時点編集とDILI薬剤歴を正式UIへ接続
@@ -46,6 +55,10 @@ MDF 32以上とプレドニゾロン40 mg/日・28日間は、国内Recommendati
 
 ## テスト
 
-```sh
+```bash
+npm install
+npm run lint
+npm run typecheck
 npm test
+npm run build
 ```

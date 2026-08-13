@@ -1,0 +1,2 @@
+import { expect,test } from "@playwright/test";
+for(const viewport of [{name:"pc-1280",width:1280,height:900},{name:"mobile-375",width:375,height:812}])test(`demo ${viewport.name}`,async({page})=>{await page.setViewportSize(viewport);await page.goto("/liver-workbench/");await page.getByRole("button",{name:"症例一覧"}).click();await page.getByRole("button",{name:/典型的な慢性AIH/}).click();await expect(page.getByText("架空症例・未保存")).toBeVisible();await page.screenshot({path:`screenshots/${viewport.name}.png`,fullPage:true})});

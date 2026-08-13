@@ -1,9 +1,42 @@
 {
-  "name": "liver-workbench-core",
-  "version": "0.3.0",
+  "name": "liver-workbench",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --test"
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "typecheck": "tsc -b --pretty false",
+    "test": "npm run test:unit && npm run test:component && npm run test:legacy",
+    "test:unit": "vitest run test/unit",
+    "test:component": "vitest run test/component",
+    "test:legacy": "node --test test/*.test.js",
+    "test:e2e": "playwright test",
+    "screenshots": "playwright test test/e2e/screenshots.spec.ts"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "latest",
+    "vite": "latest",
+    "typescript": "latest",
+    "react": "latest",
+    "react-dom": "latest"
+  },
+  "devDependencies": {
+    "@eslint/js": "latest",
+    "@playwright/test": "latest",
+    "@testing-library/jest-dom": "latest",
+    "@testing-library/react": "latest",
+    "@testing-library/user-event": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "eslint": "latest",
+    "eslint-plugin-react-hooks": "latest",
+    "eslint-plugin-react-refresh": "latest",
+    "fake-indexeddb": "latest",
+    "globals": "latest",
+    "jsdom": "latest",
+    "vitest": "latest",
+    "@types/node": "latest"
   }
 }

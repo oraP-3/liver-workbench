@@ -1,0 +1,1 @@
+export const SOURCE_LEVEL:Record<string,string>;export interface AldCard{id:string;sourceLevel:string;title:string;statement:string;source:{title:string;page:number};value?:number;automatedInterpretation?:boolean;[key:string]:unknown}export function buildAldGuidelineReference(input?:any):{clinicianSelectedContext:string;cards:AldCard[];disclaimer:string};
