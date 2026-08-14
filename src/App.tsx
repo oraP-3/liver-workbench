@@ -171,9 +171,12 @@ export function App() {
             <strong>Liver Workbench</strong>
             <small>
               {
-                { common: "共通スコア", aih: "AIH 2021", ald: "ALD 2022" }[
-                  module
-                ]
+                {
+                  common: "共通スコア",
+                  aih: "AIH 2021",
+                  liverFailure: "肝不全・ACLF",
+                  ald: "ALD 2022",
+                }[module]
               }
             </small>
           </span>
@@ -244,7 +247,7 @@ export function App() {
       <footer className="app-footer">
         <span>ver {__APP_VERSION__}</span>
         <span>commit {__COMMIT_SHA__}</span>
-        <span>ガイドライン確認日 2026-08-13</span>
+        <span>ガイドライン確認日 2026-08-14</span>
       </footer>
 
       {modal === "cases" && (

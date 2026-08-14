@@ -57,6 +57,14 @@ export function InputPane({
       ...assessment,
       findings: { ...assessment.findings, [key]: value },
     });
+  const updateLiverFailure = (
+    key: keyof Assessment["liverFailure"],
+    value: number | string | null,
+  ) =>
+    updateAssessment({
+      ...assessment,
+      liverFailure: { ...assessment.liverFailure, [key]: value },
+    });
   const addAssessment = () => {
     const next = createAssessmentForCase(record, facility);
     onRecord({ ...record, assessments: [...record.assessments, next] });
@@ -299,7 +307,9 @@ export function InputPane({
           >
             <option value="unknown">未入力・不明</option>
             <option value="none">なし</option>
-            <option value="grade12">Grade I–II</option>
+            <option value="grade1">Grade I</option>
+            <option value="grade2">Grade II</option>
+            <option value="grade12">Grade I–II（旧入力・再評価推奨）</option>
             <option value="grade34">Grade III–IV</option>
           </SelectField>
           <SelectField
@@ -414,6 +424,69 @@ export function InputPane({
               <option value="intolerant">副作用で継続困難</option>
               <option value="relapse">寛解後再上昇</option>
             </SelectField>
+          </InputSection>
+        )}
+
+        {module === "liverFailure" && (
+          <InputSection title="急性肝不全・LOHF・ACLF入力">
+            <div className="field-grid">
+              <Field
+                label="PT活性 (%)"
+                value={assessment.labs.ptActivity}
+                onChange={(value) => updateLab("ptActivity", value)}
+              />
+              <Field
+                label="初発症状から脳症II度以上まで (日)"
+                value={assessment.liverFailure.onsetToEncephalopathyDays}
+                onChange={(value) =>
+                  updateLiverFailure(
+                    "onsetToEncephalopathyDays",
+                    numberOrNull(value),
+                  )
+                }
+              />
+              <Field
+                label="増悪要因から現在まで (日)"
+                value={assessment.liverFailure.acuteExacerbationDays}
+                onChange={(value) =>
+                  updateLiverFailure(
+                    "acuteExacerbationDays",
+                    numberOrNull(value),
+                  )
+                }
+              />
+              <Field
+                label="P/F比"
+                value={assessment.liverFailure.pao2Fio2}
+                onChange={(value) =>
+                  updateLiverFailure("pao2Fio2", numberOrNull(value))
+                }
+              />
+              <Field
+                label="S/F比"
+                value={assessment.liverFailure.spo2Fio2}
+                onChange={(value) =>
+                  updateLiverFailure("spo2Fio2", numberOrNull(value))
+                }
+              />
+            </div>
+            <SelectField
+              label="ドパミンまたはドブタミン投与"
+              value={assessment.liverFailure.vasopressor}
+              onChange={(value) => updateLiverFailure("vasopressor", value)}
+            >
+              <TriOptions />
+            </SelectField>
+            <SelectField
+              label="肝萎縮"
+              value={assessment.findings.liverAtrophy}
+              onChange={(value) => updateFinding("liverAtrophy", value)}
+            >
+              <TriOptions />
+            </SelectField>
+            <p className="snapshot-note">
+              病態の選択は右側の結果画面で行います。入力値だけから急性肝不全、LOHF、ACLFを自動診断しません。
+            </p>
           </InputSection>
         )}
 

@@ -25,6 +25,30 @@ test("架空ALD症例の主要画面を操作してスクリーンショット�
   });
 });
 
+test("急性肝不全の移植連携表示をスクリーンショットで確認できる", async ({
+  page,
+}, testInfo) => {
+  await page.goto("./");
+  await page.getByRole("button", { name: "症例一覧" }).click();
+  await page
+    .getByRole("button", { name: "昏睡型急性肝不全・移植連携表示" })
+    .click();
+  await page.getByRole("tab", { name: "肝不全・ACLF" }).click();
+  await expect(
+    page.getByRole("heading", {
+      name: "昏睡型急性肝不全・LOHFと移植評価",
+    }),
+  ).toBeVisible();
+  await expect(page.getByText(/自施設で肝移植を実施しない/)).toBeVisible();
+  if (testInfo.project.name.includes("mobile")) {
+    await page.getByRole("button", { name: "入力を閉じる" }).click();
+  }
+  await page.screenshot({
+    path: testInfo.outputPath(`v1-liver-failure-${testInfo.project.name}.png`),
+    fullPage: true,
+  });
+});
+
 test("初回読込後にオフラインでアプリシェルを再表示できる", async ({
   page,
   context,

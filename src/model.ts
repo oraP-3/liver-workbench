@@ -4,12 +4,13 @@ import type {
   Facility,
   Findings,
   Labs,
+  LiverFailureAssessment,
   MedicationExposure,
   Timing,
   Treatments,
 } from "./types";
 
-export const SCHEMA_VERSION = 3 as const;
+export const SCHEMA_VERSION = 4 as const;
 
 export const uid = (prefix: string) =>
   `${prefix}-${Date.now()}-${crypto.randomUUID?.() ?? Math.random().toString(16).slice(2)}`;
@@ -55,6 +56,14 @@ export const emptyTreatments = (): Treatments => ({
   clinicalCourse: "unknown",
 });
 
+export const emptyLiverFailure = (): LiverFailureAssessment => ({
+  onsetToEncephalopathyDays: null,
+  acuteExacerbationDays: null,
+  vasopressor: "unknown",
+  pao2Fio2: null,
+  spo2Fio2: null,
+});
+
 export const emptyFacility = (): Facility => ({
   id: uid("facility"),
   name: "",
@@ -83,6 +92,7 @@ export const emptyAssessment = (
   labs: emptyLabs(),
   findings: emptyFindings(),
   treatments: emptyTreatments(),
+  liverFailure: emptyLiverFailure(),
   selectedClinicalContexts: [],
   note: "",
 });

@@ -37,7 +37,8 @@ export interface Labs {
 
 export interface Findings {
   ascites: "none" | "controlled" | "refractory" | "unknown";
-  encephalopathy: "none" | "grade12" | "grade34" | "unknown";
+  encephalopathy:
+    "none" | "grade1" | "grade2" | "grade12" | "grade34" | "unknown";
   cholestaticChild: boolean;
   dialysis: TriState;
   ana: string;
@@ -52,6 +53,14 @@ export interface Findings {
   bacterialInfection: TriState;
   dic: TriState;
   gastrointestinalBleeding: TriState;
+}
+
+export interface LiverFailureAssessment {
+  onsetToEncephalopathyDays: number | null;
+  acuteExacerbationDays: number | null;
+  vasopressor: TriState;
+  pao2Fio2: number | null;
+  spo2Fio2: number | null;
 }
 
 export interface Treatments {
@@ -69,6 +78,7 @@ export interface Assessment {
   labs: Labs;
   findings: Findings;
   treatments: Treatments;
+  liverFailure: LiverFailureAssessment;
   selectedClinicalContexts: string[];
   note: string;
 }
@@ -84,7 +94,7 @@ export interface MedicationExposure {
 }
 
 export interface CaseRecord {
-  schemaVersion: 3;
+  schemaVersion: 4;
   id: string;
   caseCode: string;
   demographics: { sex: Sex; ageAtBaseline: number | null };
@@ -96,11 +106,11 @@ export interface CaseRecord {
 }
 
 export interface Backup {
-  schemaVersion: 3;
+  schemaVersion: 4;
   appVersion: string;
   exportedAt: string;
   facilities: Facility[];
   cases: CaseRecord[];
 }
 
-export type ModuleId = "common" | "aih" | "ald";
+export type ModuleId = "common" | "aih" | "liverFailure" | "ald";

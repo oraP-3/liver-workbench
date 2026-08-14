@@ -8,11 +8,20 @@ import {
   simplifiedScore,
 } from "../aih";
 import { aldScores, commonScores } from "../clinical";
+import {
+  aclfEntryCriteria,
+  aclfOrganFailureCriteria,
+  acuteLiverFailureCoagulation,
+  encephalopathyMatchesSelectedContext,
+  liverFailureDefinition,
+  type Criterion,
+} from "../liverFailure";
 import type { Assessment, CaseRecord, ModuleId } from "../types";
 
 const moduleNames: Record<ModuleId, string> = {
   common: "共通スコア",
   aih: "AIH 2021",
+  liverFailure: "肝不全・ACLF",
   ald: "ALD 2022",
 };
 
@@ -63,6 +72,13 @@ export function ResultsPane({
           onAssessment={updateAssessment}
         />
       )}
+      {module === "liverFailure" && (
+        <LiverFailureResults
+          record={record}
+          assessment={assessment}
+          onAssessment={updateAssessment}
+        />
+      )}
       {module === "ald" && (
         <AldResults
           record={record}
@@ -74,6 +90,178 @@ export function ResultsPane({
         搭載済みの静的根拠を表示しています。オフライン版は最新情報へ自動追随せず、実行時にガイドラインを取得しません。
       </p>
     </section>
+  );
+}
+
+function LiverFailureResults({
+  record,
+  assessment,
+  onAssessment,
+}: {
+  record: CaseRecord;
+  assessment: Assessment;
+  onAssessment: (assessment: Assessment) => void;
+}) {
+  const [baselineId, setBaselineId] = useState(record.assessments[0]?.id ?? "");
+  const context =
+    assessment.selectedClinicalContexts.find((item) =>
+      item.startsWith("lf-"),
+    ) ?? "";
+  const baseline =
+    record.assessments.find((item) => item.id === baselineId) ?? null;
+  const definition = liverFailureDefinition(context);
+  const coagulation = acuteLiverFailureCoagulation(assessment);
+  const encephalopathy = encephalopathyMatchesSelectedContext(
+    context,
+    assessment,
+  );
+  const transplantFacility =
+    assessment.facilitySnapshot?.performsTransplant ?? "unknown";
+  const urgentTransplantContext = [
+    "lf-alf-acute",
+    "lf-alf-subacute",
+    "lf-lohf",
+  ].includes(context);
+  const setContext = (value: string) =>
+    onAssessment({
+      ...assessment,
+      selectedClinicalContexts: [
+        ...assessment.selectedClinicalContexts.filter(
+          (item) => !item.startsWith("lf-"),
+        ),
+        ...(value ? [value] : []),
+      ],
+    });
+
+  return (
+    <div className="result-view">
+      <ViewHeader
+        eyebrow="使用者が病態を選択して参照"
+        title="急性肝不全・LOHF・ACLF"
+        description="国内基準・ガイドライン記載との対応"
+      />
+      <div className="select-row">
+        <label>
+          使用者が選択した病態
+          <select
+            value={context}
+            onChange={(event) => setContext(event.target.value)}
+          >
+            <option value="">未選択</option>
+            <option value="lf-alf-noncoma">急性肝不全 非昏睡型</option>
+            <option value="lf-alf-acute">急性肝不全 昏睡型・急性型</option>
+            <option value="lf-alf-subacute">急性肝不全 昏睡型・亜急性型</option>
+            <option value="lf-lohf">遅発性肝不全（LOHF）</option>
+            <option value="lf-aclf">ACLF</option>
+          </select>
+        </label>
+        {context === "lf-aclf" && (
+          <label>
+            増悪前の評価時点
+            <select
+              value={baselineId}
+              onChange={(event) => setBaselineId(event.target.value)}
+            >
+              {record.assessments.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.label}
+                </option>
+              ))}
+            </select>
+          </label>
+        )}
+      </div>
+
+      {!definition ? (
+        <p className="empty-state">
+          医師が参照する病態を選択すると、その病態の国内基準・記載を表示します。
+        </p>
+      ) : (
+        <>
+          <article className="reference-card definition-card">
+            <span className="source-label domestic-guide-narrative">
+              国内定義
+            </span>
+            <h2>{definition.title}</h2>
+            <p>{definition.text}</p>
+          </article>
+
+          {context !== "lf-aclf" && (
+            <div className="criteria-list">
+              <CriterionRow criterion={coagulation} />
+              {encephalopathy && <CriterionRow criterion={encephalopathy} />}
+            </div>
+          )}
+
+          {context === "lf-aclf" && (
+            <>
+              <h2 className="result-section-title">ACLF診断基準との対応</h2>
+              <div className="criteria-list">
+                {aclfEntryCriteria(baseline, assessment).map((criterion) => (
+                  <CriterionRow key={criterion.id} criterion={criterion} />
+                ))}
+              </div>
+              <h2 className="result-section-title">
+                重症度分類に用いる臓器機能不全
+              </h2>
+              <div className="criteria-list">
+                {aclfOrganFailureCriteria(assessment).map((criterion) => (
+                  <CriterionRow key={criterion.id} criterion={criterion} />
+                ))}
+              </div>
+              <p className="scope-note">
+                各臓器条件との対応を示します。未入力項目がある状態でGradeを補完せず、ACLF診断・重症度は使用者が判断します。
+              </p>
+            </>
+          )}
+
+          {urgentTransplantContext && (
+            <article
+              className={`result-card full-card ${transplantFacility === "no" ? "urgent-card" : "caution-card"}`}
+            >
+              <span className="source-label domestic-recommendation">
+                日本肝臓学会・肝移植適応情報
+              </span>
+              <h2>昏睡型急性肝不全・LOHFと移植評価</h2>
+              <p>
+                現行の国内情報では、昏睡II度以上かつ肝移植適応スコア4点以上の急性肝不全昏睡型・LOHFは、緊急に肝移植が必要となるI群の対象です。スコアや登録適応は移植実施施設が評価します。
+              </p>
+              {transplantFacility === "no" && (
+                <p className="facility-alert">
+                  この評価時点は「自施設で肝移植を実施しない」施設設定です。日本肝臓学会は、厳格な登録基準を満たすまで待たず、早期に移植施設へ問い合わせるよう案内しています。
+                </p>
+              )}
+              {transplantFacility === "unknown" && (
+                <p className="missing">施設の肝移植実施有無が未設定です。</p>
+              )}
+              <small>
+                日本肝臓学会「肝移植の適応」・脳死肝移植レシピエント適応基準（2026年3月変更）
+              </small>
+            </article>
+          )}
+        </>
+      )}
+      <p className="scope-note">
+        病態選択、診断、治療適用、肝移植適応を自動決定しません。
+      </p>
+    </div>
+  );
+}
+
+function CriterionRow({ criterion }: { criterion: Criterion }) {
+  const label = {
+    met: "条件に対応",
+    "not-met": "条件に未対応",
+    unknown: "未評価",
+  }[criterion.state];
+  return (
+    <article className={`criterion-row ${criterion.state}`}>
+      <span>{label}</span>
+      <div>
+        <strong>{criterion.label}</strong>
+        <small>{criterion.detail}</small>
+      </div>
+    </article>
   );
 }
 
@@ -158,17 +346,6 @@ function AihResults({
   const follow =
     record.assessments.find((item) => item.id === followId) ?? null;
   const remission = biochemicalRemission(follow);
-  const referenceSelected =
-    assessment.selectedClinicalContexts.includes("aih-reference");
-  const toggleContext = (context: string, enabled: boolean) =>
-    onAssessment({
-      ...assessment,
-      selectedClinicalContexts: enabled
-        ? [...new Set([...assessment.selectedClinicalContexts, context])]
-        : assessment.selectedClinicalContexts.filter(
-            (item) => item !== context,
-          ),
-    });
 
   return (
     <div className="result-view">
@@ -181,7 +358,7 @@ function AihResults({
         {(
           [
             ["criteria", "診断基準との対応"],
-            ["guideline", "AIHとして参照"],
+            ["guideline", "治療の記載"],
             ["response", "治療反応"],
             ["acute", "急性・重症例"],
           ] as Array<[AihMode, string]>
@@ -258,43 +435,25 @@ function AihResults({
       )}
 
       {mode === "guideline" && (
-        <>
-          <label className="explicit-choice">
-            <input
-              type="checkbox"
-              checked={referenceSelected}
-              onChange={(event) =>
-                toggleContext("aih-reference", event.target.checked)
-              }
-            />
-            使用者の判断でAIHとしてガイドラインを参照する
-          </label>
-          {!referenceSelected ? (
-            <p className="empty-state">
-              上の選択後にガイドライン記載を表示します。
-            </p>
-          ) : (
-            <div className="reference-list">
-              <ReferenceCard title="治療対象に関する記載">
-                2021年版では、AIHと診断した症例ではALT 30
-                U/L超が治療対象として記載されています。入力値だけから診断または治療適用を決定しません。
-              </ReferenceCard>
-              <ReferenceCard title="第一選択治療と体重換算">
-                副腎皮質ステロイドが第一選択と記載されています。
-                {psl
-                  ? `体重${assessment.labs.weight} kgの単純換算は0.6 mg/kg/日＝${psl.dose06} mg/日、0.8 mg/kg/日＝${psl.dose08} mg/日です。`
-                  : "体重入力後に0.6および0.8 mg/kg/日の単純換算値を表示します。"}{" "}
-                錠数への丸めや処方量決定は行いません。
-              </ReferenceCard>
-              <ReferenceCard title="肝生検と治療開始">
-                肝生検は診断・病型評価に重要とされますが、急性・重症例では治療開始を遅らせない判断が記載されています。個別症例の開始判断は使用者が行います。
-              </ReferenceCard>
-              <ReferenceCard title="AZAを検討する際の確認事項">
-                AZAが検討される状況では、NUDT15、血球減少、HBVスクリーニング等に関する記載があります。
-              </ReferenceCard>
-            </div>
-          )}
-        </>
+        <div className="reference-list">
+          <ReferenceCard title="治療対象に関する記載">
+            2021年版では、AIHと診断した症例ではALT 30
+            U/L超が治療対象として記載されています。入力値だけから診断または治療適用を決定しません。
+          </ReferenceCard>
+          <ReferenceCard title="第一選択治療と体重換算">
+            副腎皮質ステロイドが第一選択と記載されています。
+            {psl
+              ? `体重${assessment.labs.weight} kgの単純換算は0.6 mg/kg/日＝${psl.dose06} mg/日、0.8 mg/kg/日＝${psl.dose08} mg/日です。`
+              : "体重入力後に0.6および0.8 mg/kg/日の単純換算値を表示します。"}{" "}
+            錠数への丸めや処方量決定は行いません。
+          </ReferenceCard>
+          <ReferenceCard title="肝生検と治療開始">
+            肝生検は診断・病型評価に重要とされますが、急性・重症例では治療開始を遅らせない判断が記載されています。個別症例の開始判断は使用者が行います。
+          </ReferenceCard>
+          <ReferenceCard title="AZAを検討する際の確認事項">
+            AZAが検討される状況では、NUDT15、血球減少、HBVスクリーニング等に関する記載があります。
+          </ReferenceCard>
+        </div>
       )}
 
       {mode === "response" && (

@@ -523,6 +523,70 @@ p {
   gap: 13px;
   margin-top: 16px;
 }
+.definition-card {
+  margin-top: 16px;
+}
+.result-section-title {
+  margin: 22px 0 10px;
+  color: var(--green-950);
+  font-size: 15px;
+}
+.criteria-list {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+}
+.criterion-row {
+  display: grid;
+  grid-template-columns: 92px 1fr;
+  gap: 12px;
+  align-items: start;
+  padding: 11px 13px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: #fff;
+}
+.criterion-row > span {
+  width: fit-content;
+  padding: 3px 7px;
+  border-radius: 999px;
+  background: #edf1ef;
+  color: #5f716a;
+  font-size: 10px;
+  font-weight: 800;
+}
+.criterion-row.met > span {
+  background: var(--green-100);
+  color: var(--green-800);
+}
+.criterion-row.not-met > span {
+  background: #f6f2ea;
+  color: #765f3b;
+}
+.criterion-row div {
+  display: grid;
+  gap: 4px;
+}
+.criterion-row strong {
+  color: var(--green-950);
+  font-size: 12px;
+}
+.criterion-row small {
+  color: var(--muted);
+  font-size: 11px;
+}
+.urgent-card {
+  margin-top: 16px;
+  border-color: #d78e82;
+  background: #fff9f7;
+}
+.facility-alert {
+  padding: 10px 12px;
+  border-left: 4px solid var(--danger);
+  background: #fff;
+  color: #783b32;
+  font-weight: 700;
+}
 .reference-card small {
   color: #74877f;
   font-size: 10px;

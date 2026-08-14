@@ -37,9 +37,13 @@ export function childPugh({
   const albuminPoints = albumin > 3.5 ? 1 : albumin >= 2.8 ? 2 : 3;
   const inrPoints = inr < 1.7 ? 1 : inr <= 2.3 ? 2 : 3;
   const ascitesPoints = { none: 1, controlled: 2, refractory: 3 }[ascites];
-  const encephalopathyPoints = { none: 1, grade12: 2, grade34: 3 }[
-    encephalopathy
-  ];
+  const encephalopathyPoints = {
+    none: 1,
+    grade1: 2,
+    grade2: 2,
+    grade12: 2,
+    grade34: 3,
+  }[encephalopathy];
   if (!ascitesPoints || !encephalopathyPoints) return null;
   const score =
     bilirubinPoints +

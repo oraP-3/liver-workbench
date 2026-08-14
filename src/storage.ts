@@ -2,6 +2,7 @@ import { z } from "zod";
 import {
   emptyAssessment,
   emptyFindings,
+  emptyLiverFailure,
   emptyLabs,
   emptyMedication,
   emptyTreatments,
@@ -52,7 +53,14 @@ const labsSchema = z.object({
 
 const findingsSchema = z.object({
   ascites: z.enum(["none", "controlled", "refractory", "unknown"]),
-  encephalopathy: z.enum(["none", "grade12", "grade34", "unknown"]),
+  encephalopathy: z.enum([
+    "none",
+    "grade1",
+    "grade2",
+    "grade12",
+    "grade34",
+    "unknown",
+  ]),
   cholestaticChild: z.boolean(),
   dialysis: triState,
   ana: z.string(),
@@ -67,6 +75,14 @@ const findingsSchema = z.object({
   bacterialInfection: triState,
   dic: triState,
   gastrointestinalBleeding: triState,
+});
+
+const liverFailureSchema = z.object({
+  onsetToEncephalopathyDays: nullableNumber,
+  acuteExacerbationDays: nullableNumber,
+  vasopressor: triState,
+  pao2Fio2: nullableNumber,
+  spo2Fio2: nullableNumber,
 });
 
 const assessmentSchema = z.object({
@@ -87,6 +103,7 @@ const assessmentSchema = z.object({
       "unknown",
     ]),
   }),
+  liverFailure: liverFailureSchema,
   selectedClinicalContexts: z.array(z.string()),
   note: z.string(),
 });
@@ -102,7 +119,7 @@ const medicationSchema = z.object({
 });
 
 const caseSchema = z.object({
-  schemaVersion: z.literal(3),
+  schemaVersion: z.literal(4),
   id: z.string().min(1),
   caseCode: z.string().min(1),
   demographics: z.object({
@@ -182,8 +199,8 @@ export function migrateCase(raw: unknown): CaseRecord {
   if (!raw || typeof raw !== "object")
     throw new Error("症例データの形式が不正です。");
   const value = structuredClone(raw) as Record<string, unknown>;
-  if (value.schemaVersion === 3) return value as unknown as CaseRecord;
-  if (value.schemaVersion !== 2)
+  if (value.schemaVersion === 4) return value as unknown as CaseRecord;
+  if (value.schemaVersion !== 2 && value.schemaVersion !== 3)
     throw new Error("未対応のschema versionです。");
   const assessments = Array.isArray(value.assessments) ? value.assessments : [];
   const medications = Array.isArray(value.medications) ? value.medications : [];
@@ -208,6 +225,10 @@ export function migrateCase(raw: unknown): CaseRecord {
         treatments: {
           ...emptyTreatments(),
           ...(assessment.treatments as object | undefined),
+        },
+        liverFailure: {
+          ...emptyLiverFailure(),
+          ...(assessment.liverFailure as object | undefined),
         },
         age:
           typeof assessment.age === "number"
@@ -265,7 +286,11 @@ export function validateBackup(text: string): Backup {
   if (!raw || typeof raw !== "object")
     throw new Error("バックアップ形式が不正です。");
   const source = raw as Record<string, unknown>;
-  if (source.schemaVersion !== 2 && source.schemaVersion !== 3) {
+  if (
+    source.schemaVersion !== 2 &&
+    source.schemaVersion !== 3 &&
+    source.schemaVersion !== 4
+  ) {
     throw new Error("未対応のschema versionです。");
   }
   try {
@@ -277,7 +302,7 @@ export function validateBackup(text: string): Backup {
       throw new Error("バックアップ内で症例整理番号が重複しています。");
     }
     return {
-      schemaVersion: 3,
+      schemaVersion: 4,
       appVersion: String(source.appVersion ?? "legacy"),
       exportedAt: String(source.exportedAt ?? new Date().toISOString()),
       facilities,

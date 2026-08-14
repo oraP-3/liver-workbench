@@ -65,4 +65,27 @@ describe("local persistence and backup", () => {
     expect(mergeBackup([incoming], [existing], false)[0].id).toBe(existing.id);
     expect(mergeBackup([incoming], [existing], true)[0].id).toBe("new");
   });
+
+  it("migrates schema 3 cases with liver-failure defaults", () => {
+    const legacy = structuredClone(emptyCase()) as unknown as Record<
+      string,
+      unknown
+    >;
+    legacy.schemaVersion = 3;
+    const assessments = legacy.assessments as Array<Record<string, unknown>>;
+    delete assessments[0].liverFailure;
+    const backup = {
+      schemaVersion: 3,
+      appVersion: "1.0.0",
+      exportedAt: new Date().toISOString(),
+      facilities: [],
+      cases: [{ ...legacy, caseCode: "V3" }],
+    };
+
+    const migrated = validateBackup(JSON.stringify(backup));
+    expect(migrated.schemaVersion).toBe(4);
+    expect(migrated.cases[0].assessments[0].liverFailure.vasopressor).toBe(
+      "unknown",
+    );
+  });
 });

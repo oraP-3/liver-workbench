@@ -140,9 +140,36 @@ export function aldDemo(): CaseRecord {
   return record;
 }
 
+export function liverFailureDemo(): CaseRecord {
+  const { record } = base("DEMO-ALF-01");
+  const assessment = record.assessments[0];
+  assessment.label = "脳症出現時";
+  assessment.labs = {
+    ...assessment.labs,
+    ast: 2850,
+    alt: 3210,
+    platelets: 8.6,
+    totalBilirubin: 17.2,
+    albumin: 2.9,
+    inr: 2.8,
+    ptActivity: 22,
+    creatinine: 1.4,
+  };
+  assessment.findings = {
+    ...assessment.findings,
+    encephalopathy: "grade2",
+    liverAtrophy: "yes",
+    dialysis: "no",
+  };
+  assessment.liverFailure.onsetToEncephalopathyDays = 14;
+  assessment.selectedClinicalContexts = ["lf-alf-subacute"];
+  return record;
+}
+
 export const DEMOS: Record<string, () => CaseRecord> = {
   典型的な慢性AIH: chronicAihDemo,
   "急性発症・自己抗体陰性AIH": acuteAihDemo,
   DILIとの鑑別が未確定のAIH: diliDifferentialDemo,
+  "昏睡型急性肝不全・移植連携表示": liverFailureDemo,
   "JAS・MDF・Lille確認用ALD": aldDemo,
 };

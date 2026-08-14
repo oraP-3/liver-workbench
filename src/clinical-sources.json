@@ -1,5 +1,5 @@
 {
-  "verifiedAt": "2026-08-13",
+  "verifiedAt": "2026-08-14",
   "displayPolicy": "診断・治療指示ではなく、国内ガイドライン等の記載と入力値の対応を表示する",
   "modules": [
     {
@@ -71,11 +71,11 @@
     },
     {
       "id": "acute-liver-failure",
-      "title": "急性肝不全・LOHFの国内診断基準および肝移植適応情報",
-      "version": "診断基準2011／移植適応ページ現行",
+      "title": "急性肝不全診療ガイドライン2021・急性肝不全/LOHF国内診断基準・肝移植適応情報",
+      "version": "診療ガイドライン2021／診断基準2011／脳死肝移植レシピエント適応基準2026年3月変更",
       "status": "adopted-as-composite-source",
       "publisher": "厚生労働省研究班／日本肝臓学会",
-      "url": "https://www.jsh.or.jp/medical/transplant/diagnosis/"
+      "url": "https://www.jsh.or.jp/medical/transplant/indications/criteria.html"
     },
     {
       "id": "aclf",
