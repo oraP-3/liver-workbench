@@ -58,4 +58,24 @@ describe("application shell", () => {
     ).toBeVisible();
     expect(screen.getByText(/自施設で肝移植を実施しない/)).toBeVisible();
   });
+
+  it("shows ACLF entry and organ-failure correspondence from separate timepoints", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    await user.click(await screen.findByRole("button", { name: "症例一覧" }));
+    await user.click(
+      screen.getByRole("button", { name: "ACLF国内基準・6臓器条件" }),
+    );
+    await user.click(screen.getByRole("tab", { name: "肝不全・ACLF" }));
+
+    expect(
+      screen.getByRole("heading", { name: "ACLF診断基準との対応" }),
+    ).toBeVisible();
+    expect(screen.getByText("7点 / Class B")).toBeVisible();
+    expect(
+      screen.getByRole("heading", {
+        name: "重症度分類に用いる臓器機能不全",
+      }),
+    ).toBeVisible();
+  });
 });

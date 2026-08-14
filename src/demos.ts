@@ -166,10 +166,70 @@ export function liverFailureDemo(): CaseRecord {
   return record;
 }
 
+export function aclfDemo(): CaseRecord {
+  const { record } = base("DEMO-ACLF-01");
+  const current = record.assessments[0];
+  current.label = "急性増悪14日目";
+  current.timing = { absoluteDate: "2026-08-15", relativeDay: 14 };
+  current.labs = {
+    ...current.labs,
+    ast: 340,
+    alt: 180,
+    platelets: 1.8,
+    totalBilirubin: 13,
+    albumin: 2.6,
+    inr: 2.8,
+    ptActivity: 24,
+    creatinine: 2.2,
+  };
+  current.findings = {
+    ...current.findings,
+    ascites: "refractory",
+    encephalopathy: "grade34",
+    dialysis: "no",
+  };
+  current.liverFailure = {
+    ...current.liverFailure,
+    acuteExacerbationDays: 14,
+    vasopressor: "yes",
+    pao2Fio2: 180,
+  };
+  current.selectedClinicalContexts = ["lf-aclf"];
+
+  const baseline = structuredClone(current);
+  baseline.id = `${current.id}-baseline`;
+  baseline.label = "増悪前";
+  baseline.timing = { absoluteDate: "2026-08-01", relativeDay: 0 };
+  baseline.labs = {
+    ...baseline.labs,
+    platelets: 9,
+    totalBilirubin: 1.5,
+    albumin: 3.2,
+    inr: 1.2,
+    creatinine: 0.8,
+  };
+  baseline.findings = {
+    ...baseline.findings,
+    ascites: "controlled",
+    encephalopathy: "none",
+    dialysis: "no",
+  };
+  baseline.liverFailure = {
+    ...baseline.liverFailure,
+    acuteExacerbationDays: null,
+    vasopressor: "no",
+    pao2Fio2: null,
+  };
+  baseline.selectedClinicalContexts = [];
+  record.assessments.push(baseline);
+  return record;
+}
+
 export const DEMOS: Record<string, () => CaseRecord> = {
   典型的な慢性AIH: chronicAihDemo,
   "急性発症・自己抗体陰性AIH": acuteAihDemo,
   DILIとの鑑別が未確定のAIH: diliDifferentialDemo,
   "昏睡型急性肝不全・移植連携表示": liverFailureDemo,
+  "ACLF国内基準・6臓器条件": aclfDemo,
   "JAS・MDF・Lille確認用ALD": aldDemo,
 };

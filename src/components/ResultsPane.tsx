@@ -102,7 +102,11 @@ function LiverFailureResults({
   assessment: Assessment;
   onAssessment: (assessment: Assessment) => void;
 }) {
-  const [baselineId, setBaselineId] = useState(record.assessments[0]?.id ?? "");
+  const [baselineId, setBaselineId] = useState(
+    record.assessments.find((item) => item.id !== assessment.id)?.id ??
+      record.assessments[0]?.id ??
+      "",
+  );
   const context =
     assessment.selectedClinicalContexts.find((item) =>
       item.startsWith("lf-"),
