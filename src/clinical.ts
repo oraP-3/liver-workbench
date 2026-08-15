@@ -40,6 +40,7 @@ const LAB_LABELS: Record<keyof Assessment["labs"], string> = {
   ptSeconds: "患者PT秒",
   controlPtSeconds: "対照PT秒",
   weight: "体重",
+  egfr: "eGFR",
 };
 
 export function commonScores(assessment: Assessment) {

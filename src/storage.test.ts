@@ -83,8 +83,31 @@ describe("local persistence and backup", () => {
     };
 
     const migrated = validateBackup(JSON.stringify(backup));
-    expect(migrated.schemaVersion).toBe(4);
+    expect(migrated.schemaVersion).toBe(5);
     expect(migrated.cases[0].assessments[0].liverFailure.vasopressor).toBe(
+      "unknown",
+    );
+  });
+
+  it("migrates schema 4 cases with viral-hepatitis defaults", () => {
+    const legacy = structuredClone(emptyCase()) as unknown as Record<
+      string,
+      unknown
+    >;
+    legacy.schemaVersion = 4;
+    const assessments = legacy.assessments as Array<Record<string, unknown>>;
+    delete assessments[0].viralHepatitis;
+    const backup = {
+      schemaVersion: 4,
+      appVersion: "1.0.0",
+      exportedAt: new Date().toISOString(),
+      facilities: [],
+      cases: [{ ...legacy, caseCode: "V4" }],
+    };
+
+    const migrated = validateBackup(JSON.stringify(backup));
+    expect(migrated.schemaVersion).toBe(5);
+    expect(migrated.cases[0].assessments[0].viralHepatitis.hcvRnaDetected).toBe(
       "unknown",
     );
   });

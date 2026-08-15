@@ -225,11 +225,73 @@ export function aclfDemo(): CaseRecord {
   return record;
 }
 
+export function hbvExacerbationDemo(): CaseRecord {
+  const { record } = base("DEMO-HBV-01");
+  const assessment = record.assessments[0];
+  assessment.label = "慢性肝炎増悪時";
+  assessment.labs = {
+    ...assessment.labs,
+    ast: 310,
+    alt: 465,
+    platelets: 12.8,
+    totalBilirubin: 2.1,
+    albumin: 3.6,
+    inr: 1.18,
+    creatinine: 0.78,
+    egfr: 76,
+  };
+  assessment.viralHepatitis = {
+    ...assessment.viralHepatitis,
+    hbvDnaLogIU: 5.8,
+    hbvDnaDetected: "yes",
+    hbeAg: "no",
+    hbsAg: "yes",
+    fibrosisF2Plus: "yes",
+    hccFamilyHistory: "no",
+    renalBoneRisk: "no",
+  };
+  assessment.selectedClinicalContexts = ["hbv-chronic"];
+  return record;
+}
+
+export function hcvDecompensatedDemo(): CaseRecord {
+  const { record } = base("DEMO-HCV-01");
+  const assessment = record.assessments[0];
+  assessment.label = "DAA治療前";
+  assessment.labs = {
+    ...assessment.labs,
+    ast: 72,
+    alt: 58,
+    platelets: 7.8,
+    totalBilirubin: 2.8,
+    albumin: 2.9,
+    inr: 1.35,
+    creatinine: 0.92,
+    egfr: 58,
+  };
+  assessment.findings = {
+    ...assessment.findings,
+    ascites: "controlled",
+    encephalopathy: "grade1",
+    dialysis: "no",
+  };
+  assessment.viralHepatitis = {
+    ...assessment.viralHepatitis,
+    hcvRnaDetected: "yes",
+    hcvGenotype: "1",
+    hcvTreatmentHistory: "none",
+  };
+  assessment.selectedClinicalContexts = ["hcv-decompensated"];
+  return record;
+}
+
 export const DEMOS: Record<string, () => CaseRecord> = {
   典型的な慢性AIH: chronicAihDemo,
   "急性発症・自己抗体陰性AIH": acuteAihDemo,
   DILIとの鑑別が未確定のAIH: diliDifferentialDemo,
   "昏睡型急性肝不全・移植連携表示": liverFailureDemo,
   "ACLF国内基準・6臓器条件": aclfDemo,
+  "HBV慢性肝炎増悪・治療対象": hbvExacerbationDemo,
+  "HCV非代償性肝硬変・DAA候補": hcvDecompensatedDemo,
   "JAS・MDF・Lille確認用ALD": aldDemo,
 };

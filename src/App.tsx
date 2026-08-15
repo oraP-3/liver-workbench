@@ -175,6 +175,8 @@ export function App() {
                   common: "共通スコア",
                   aih: "AIH 2021",
                   liverFailure: "肝不全・ACLF",
+                  hbv: "HBV 第5版",
+                  hcv: "HCV 8.4",
                   ald: "ALD 2022",
                 }[module]
               }

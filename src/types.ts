@@ -33,6 +33,7 @@ export interface Labs {
   ptSeconds: number | null;
   controlPtSeconds: number | null;
   weight: number | null;
+  egfr: number | null;
 }
 
 export interface Findings {
@@ -63,6 +64,25 @@ export interface LiverFailureAssessment {
   spo2Fio2: number | null;
 }
 
+export interface ViralHepatitisAssessment {
+  hbvDnaLogIU: number | null;
+  hbvDnaDetected: TriState;
+  hbeAg: TriState;
+  hbsAg: TriState;
+  hbsAb: TriState;
+  hbcAb: TriState;
+  igmHbcAbIndex: number | null;
+  hbcrAgLogU: number | null;
+  fibrosisF2Plus: TriState;
+  hccFamilyHistory: TriState;
+  renalBoneRisk: TriState;
+  hcvRnaDetected: TriState;
+  hcvGenotype: "1" | "2" | "mixed12" | "other" | "unknown";
+  hcvTreatmentHistory:
+    "none" | "ifnProteaseFailure" | "ifnFreeDaaFailure" | "unknown";
+  p32Deletion: TriState;
+}
+
 export interface Treatments {
   pslResponse: "marked" | "present" | "absent" | "unknown";
   clinicalCourse:
@@ -79,6 +99,7 @@ export interface Assessment {
   findings: Findings;
   treatments: Treatments;
   liverFailure: LiverFailureAssessment;
+  viralHepatitis: ViralHepatitisAssessment;
   selectedClinicalContexts: string[];
   note: string;
 }
@@ -94,7 +115,7 @@ export interface MedicationExposure {
 }
 
 export interface CaseRecord {
-  schemaVersion: 4;
+  schemaVersion: 5;
   id: string;
   caseCode: string;
   demographics: { sex: Sex; ageAtBaseline: number | null };
@@ -106,11 +127,12 @@ export interface CaseRecord {
 }
 
 export interface Backup {
-  schemaVersion: 4;
+  schemaVersion: 5;
   appVersion: string;
   exportedAt: string;
   facilities: Facility[];
   cases: CaseRecord[];
 }
 
-export type ModuleId = "common" | "aih" | "liverFailure" | "ald";
+export type ModuleId =
+  "common" | "aih" | "liverFailure" | "hbv" | "hcv" | "ald";

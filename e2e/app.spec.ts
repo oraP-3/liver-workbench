@@ -49,6 +49,31 @@ test("急性肝不全の移植連携表示をスクリーンショットで確�
   });
 });
 
+test("HBVとHCVの治療参照画面を確認できる", async ({ page }, testInfo) => {
+  await page.goto("./");
+  await page.getByRole("button", { name: "症例一覧" }).click();
+  await page.getByRole("button", { name: "HBV慢性肝炎増悪・治療対象" }).click();
+  await page.getByRole("tab", { name: "HBV 第5版" }).click();
+  await expect(
+    page.getByText("治療対象の数値条件に対応", { exact: true }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "症例一覧" }).click();
+  await page
+    .getByRole("button", { name: "HCV非代償性肝硬変・DAA候補" })
+    .click();
+  await page.getByRole("tab", { name: "HCV 8.4" }).click();
+  await expect(
+    page.getByRole("heading", { name: "非代償性肝硬変とChild-Pugh" }),
+  ).toBeVisible();
+  if (testInfo.project.name.includes("mobile")) {
+    await page.getByRole("button", { name: "入力を閉じる" }).click();
+  }
+  await page.screenshot({
+    path: testInfo.outputPath(`v1-hbv-hcv-${testInfo.project.name}.png`),
+    fullPage: true,
+  });
+});
+
 test("初回読込後にオフラインでアプリシェルを再表示できる", async ({
   page,
   context,

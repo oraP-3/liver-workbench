@@ -523,6 +523,29 @@ p {
   gap: 13px;
   margin-top: 16px;
 }
+.regimen-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 13px;
+  margin-top: 16px;
+}
+.regimen-card.contraindicated {
+  border-color: #d78e82;
+  background: #fff9f7;
+}
+.inline-alert {
+  display: block;
+  margin-top: 8px;
+  padding: 8px 10px;
+  border-left: 3px solid #b77d2d;
+  background: #fff9e9;
+  color: #6d511b;
+  font-weight: 700;
+}
+.hbv-indeterminate {
+  border-color: #e4c67e;
+  background: #fffdf6;
+}
 .definition-card {
   margin-top: 16px;
 }
@@ -856,7 +879,8 @@ p {
   }
   .field-grid,
   .score-grid,
-  .demo-grid {
+  .demo-grid,
+  .regimen-grid {
     grid-template-columns: 1fr;
   }
   .full-card {

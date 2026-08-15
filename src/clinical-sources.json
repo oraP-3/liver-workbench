@@ -1,5 +1,5 @@
 {
-  "verifiedAt": "2026-08-14",
+  "verifiedAt": "2026-08-15",
   "displayPolicy": "診断・治療指示ではなく、国内ガイドライン等の記載と入力値の対応を表示する",
   "modules": [
     {
@@ -13,17 +13,33 @@
       "id": "hcv",
       "title": "C型肝炎治療ガイドライン",
       "version": "第8.4版（2025年4月）",
-      "status": "adopted",
+      "status": "implemented",
       "publisher": "日本肝臓学会",
-      "url": "https://www.jsh.or.jp/medical/guidelines/jsh_guidlines/hepatitis_c.html"
+      "url": "https://www.jsh.or.jp/medical/guidelines/jsh_guidlines/hepatitis_c.html",
+      "implementedContent": [
+        "持続感染例の抗ウイルス治療対象",
+        "DAA治療歴なしの慢性肝炎・代償性肝硬変・非代償性肝硬変の治療フロー",
+        "eGFR 30未満または透析例におけるSOF禁忌表示",
+        "IFNフリーDAA不成功例の耐性検査・専門医再治療選択",
+        "非代償性肝硬変のChild-Pugh Cに対する慎重投与記載",
+        "SVR後の長期肝発癌フォロー"
+      ]
     },
     {
       "id": "hbv",
       "title": "B型肝炎治療ガイドライン",
       "version": "第5版（2026年6月）",
-      "status": "adopted",
+      "status": "implemented",
       "publisher": "日本肝臓学会",
-      "url": "https://www.jsh.or.jp/medical/guidelines/jsh_guidlines/hepatitis_b.html"
+      "url": "https://www.jsh.or.jp/medical/guidelines/jsh_guidlines/hepatitis_b.html",
+      "implementedContent": [
+        "慢性肝炎のALT・HBV DNA治療対象条件とindeterminate phase",
+        "肝硬変のHBV DNA陽性治療対象条件",
+        "初回核酸アナログ選択肢と腎・骨リスク",
+        "HBe抗原陽性ALT上昇例の治療待機に関する本文記載",
+        "B型急性肝炎・HBV急性肝不全の治療と肝移植評価記載",
+        "免疫抑制・化学療法時のHBV再活性化スクリーニングとHBV DNAモニタリング"
+      ]
     },
     {
       "id": "ald",

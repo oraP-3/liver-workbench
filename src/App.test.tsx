@@ -4,15 +4,46 @@ import { describe, expect, it } from "vitest";
 import { App } from "./App";
 
 describe("application shell", () => {
-  it("renders working modules without future empty tabs", async () => {
+  it("renders the implemented clinical modules", async () => {
     render(<App />);
     expect(
       await screen.findByRole("tab", { name: "共通スコア" }),
     ).toBeVisible();
     expect(screen.getByRole("tab", { name: "AIH 2021" })).toBeVisible();
     expect(screen.getByRole("tab", { name: "肝不全・ACLF" })).toBeVisible();
+    expect(screen.getByRole("tab", { name: "HBV 第5版" })).toBeVisible();
+    expect(screen.getByRole("tab", { name: "HCV 8.4" })).toBeVisible();
     expect(screen.getByRole("tab", { name: "ALD 2022" })).toBeVisible();
-    expect(screen.queryByRole("tab", { name: /HCV/ })).not.toBeInTheDocument();
+  });
+
+  it("shows HBV chronic hepatitis treatment correspondence", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    await user.click(await screen.findByRole("button", { name: "症例一覧" }));
+    await user.click(
+      screen.getByRole("button", { name: "HBV慢性肝炎増悪・治療対象" }),
+    );
+    await user.click(screen.getByRole("tab", { name: "HBV 第5版" }));
+    expect(
+      screen.getByText("治療対象の数値条件に対応", { exact: true }),
+    ).toBeVisible();
+    expect(
+      screen.getByRole("heading", { name: "初回治療の選択肢" }),
+    ).toBeVisible();
+  });
+
+  it("shows HCV decompensated cirrhosis treatment reference", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    await user.click(await screen.findByRole("button", { name: "症例一覧" }));
+    await user.click(
+      screen.getByRole("button", { name: "HCV非代償性肝硬変・DAA候補" }),
+    );
+    await user.click(screen.getByRole("tab", { name: "HCV 8.4" }));
+    expect(screen.getByRole("heading", { name: "SOF/VEL" })).toBeVisible();
+    expect(
+      screen.getByRole("heading", { name: "非代償性肝硬変とChild-Pugh" }),
+    ).toBeVisible();
   });
 
   it("collapses the complete input body", async () => {

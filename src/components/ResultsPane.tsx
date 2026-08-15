@@ -17,11 +17,14 @@ import {
   type Criterion,
 } from "../liverFailure";
 import type { Assessment, CaseRecord, ModuleId } from "../types";
+import { HbvResults, HcvResults } from "./ViralHepatitisResults";
 
 const moduleNames: Record<ModuleId, string> = {
   common: "共通スコア",
   aih: "AIH 2021",
   liverFailure: "肝不全・ACLF",
+  hbv: "HBV 第5版",
+  hcv: "HCV 8.4",
   ald: "ALD 2022",
 };
 
@@ -78,6 +81,12 @@ export function ResultsPane({
           assessment={assessment}
           onAssessment={updateAssessment}
         />
+      )}
+      {module === "hbv" && (
+        <HbvResults assessment={assessment} onAssessment={updateAssessment} />
+      )}
+      {module === "hcv" && (
+        <HcvResults assessment={assessment} onAssessment={updateAssessment} />
       )}
       {module === "ald" && (
         <AldResults

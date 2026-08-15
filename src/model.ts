@@ -8,9 +8,10 @@ import type {
   MedicationExposure,
   Timing,
   Treatments,
+  ViralHepatitisAssessment,
 } from "./types";
 
-export const SCHEMA_VERSION = 4 as const;
+export const SCHEMA_VERSION = 5 as const;
 
 export const uid = (prefix: string) =>
   `${prefix}-${Date.now()}-${crypto.randomUUID?.() ?? Math.random().toString(16).slice(2)}`;
@@ -30,6 +31,7 @@ export const emptyLabs = (): Labs => ({
   ptSeconds: null,
   controlPtSeconds: null,
   weight: null,
+  egfr: null,
 });
 
 export const emptyFindings = (): Findings => ({
@@ -64,6 +66,24 @@ export const emptyLiverFailure = (): LiverFailureAssessment => ({
   spo2Fio2: null,
 });
 
+export const emptyViralHepatitis = (): ViralHepatitisAssessment => ({
+  hbvDnaLogIU: null,
+  hbvDnaDetected: "unknown",
+  hbeAg: "unknown",
+  hbsAg: "unknown",
+  hbsAb: "unknown",
+  hbcAb: "unknown",
+  igmHbcAbIndex: null,
+  hbcrAgLogU: null,
+  fibrosisF2Plus: "unknown",
+  hccFamilyHistory: "unknown",
+  renalBoneRisk: "unknown",
+  hcvRnaDetected: "unknown",
+  hcvGenotype: "unknown",
+  hcvTreatmentHistory: "unknown",
+  p32Deletion: "unknown",
+});
+
 export const emptyFacility = (): Facility => ({
   id: uid("facility"),
   name: "",
@@ -93,6 +113,7 @@ export const emptyAssessment = (
   findings: emptyFindings(),
   treatments: emptyTreatments(),
   liverFailure: emptyLiverFailure(),
+  viralHepatitis: emptyViralHepatitis(),
   selectedClinicalContexts: [],
   note: "",
 });

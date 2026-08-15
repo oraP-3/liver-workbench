@@ -65,6 +65,14 @@ export function InputPane({
       ...assessment,
       liverFailure: { ...assessment.liverFailure, [key]: value },
     });
+  const updateViralHepatitis = (
+    key: keyof Assessment["viralHepatitis"],
+    value: number | string | null,
+  ) =>
+    updateAssessment({
+      ...assessment,
+      viralHepatitis: { ...assessment.viralHepatitis, [key]: value },
+    });
   const addAssessment = () => {
     const next = createAssessmentForCase(record, facility);
     onRecord({ ...record, assessments: [...record.assessments, next] });
@@ -531,6 +539,116 @@ export function InputPane({
                 <TriOptions />
               </SelectField>
             ))}
+          </InputSection>
+        )}
+
+        {module === "hbv" && (
+          <InputSection title="HBV入力">
+            <div className="field-grid">
+              <Field
+                label="HBV DNA (Log IU/mL)"
+                value={assessment.viralHepatitis.hbvDnaLogIU}
+                onChange={(value) =>
+                  updateViralHepatitis("hbvDnaLogIU", numberOrNull(value))
+                }
+              />
+              <Field
+                label="IgM-HBc抗体 index"
+                value={assessment.viralHepatitis.igmHbcAbIndex}
+                onChange={(value) =>
+                  updateViralHepatitis("igmHbcAbIndex", numberOrNull(value))
+                }
+              />
+              <Field
+                label="HBcrAg (Log U/mL)"
+                value={assessment.viralHepatitis.hbcrAgLogU}
+                onChange={(value) =>
+                  updateViralHepatitis("hbcrAgLogU", numberOrNull(value))
+                }
+              />
+              <Field
+                label="eGFR (mL/min/1.73m²)"
+                value={assessment.labs.egfr}
+                onChange={(value) => updateLab("egfr", value)}
+              />
+            </div>
+            {(
+              [
+                ["hbvDnaDetected", "HBV DNA検出"],
+                ["hbeAg", "HBe抗原"],
+                ["hbsAg", "HBs抗原"],
+                ["hbsAb", "HBs抗体"],
+                ["hbcAb", "HBc抗体"],
+                ["fibrosisF2Plus", "肝線維化 F2以上"],
+                ["hccFamilyHistory", "肝細胞癌の家族歴"],
+                ["renalBoneRisk", "腎機能障害・低P血症・骨減少症/骨粗鬆症"],
+              ] as Array<[keyof Assessment["viralHepatitis"], string]>
+            ).map(([key, label]) => (
+              <SelectField
+                key={key}
+                label={label}
+                value={String(assessment.viralHepatitis[key])}
+                onChange={(value) => updateViralHepatitis(key, value)}
+              >
+                <TriOptions />
+              </SelectField>
+            ))}
+          </InputSection>
+        )}
+
+        {module === "hcv" && (
+          <InputSection title="HCV入力">
+            <div className="field-grid">
+              <Field
+                label="eGFR (mL/min/1.73m²)"
+                value={assessment.labs.egfr}
+                onChange={(value) => updateLab("egfr", value)}
+              />
+            </div>
+            <SelectField
+              label="HCV RNA"
+              value={assessment.viralHepatitis.hcvRnaDetected}
+              onChange={(value) =>
+                updateViralHepatitis("hcvRnaDetected", value)
+              }
+            >
+              <TriOptions />
+            </SelectField>
+            <SelectField
+              label="HCVゲノタイプ"
+              value={assessment.viralHepatitis.hcvGenotype}
+              onChange={(value) => updateViralHepatitis("hcvGenotype", value)}
+            >
+              <option value="unknown">未入力</option>
+              <option value="1">1型</option>
+              <option value="2">2型</option>
+              <option value="mixed12">1型・2型混合</option>
+              <option value="other">その他</option>
+            </SelectField>
+            <SelectField
+              label="HCV治療歴"
+              value={assessment.viralHepatitis.hcvTreatmentHistory}
+              onChange={(value) =>
+                updateViralHepatitis("hcvTreatmentHistory", value)
+              }
+            >
+              <option value="unknown">未入力</option>
+              <option value="none">DAA治療歴なし</option>
+              <option value="ifnProteaseFailure">
+                プロテアーゼ阻害薬＋Peg-IFN＋RBV不成功
+              </option>
+              <option value="ifnFreeDaaFailure">IFNフリーDAA不成功</option>
+            </SelectField>
+            {assessment.viralHepatitis.hcvTreatmentHistory ===
+              "ifnFreeDaaFailure" && (
+              <SelectField
+                label="NS5A P32欠失"
+                value={assessment.viralHepatitis.p32Deletion}
+                onChange={(value) => updateViralHepatitis("p32Deletion", value)}
+              >
+                <TriOptions />
+              </SelectField>
+            )}
           </InputSection>
         )}
 

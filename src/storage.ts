@@ -6,6 +6,7 @@ import {
   emptyLabs,
   emptyMedication,
   emptyTreatments,
+  emptyViralHepatitis,
   SCHEMA_VERSION,
 } from "./model";
 import type { Backup, CaseRecord, Facility } from "./types";
@@ -49,6 +50,7 @@ const labsSchema = z.object({
   ptSeconds: nullableNumber,
   controlPtSeconds: nullableNumber,
   weight: nullableNumber,
+  egfr: nullableNumber,
 });
 
 const findingsSchema = z.object({
@@ -85,6 +87,29 @@ const liverFailureSchema = z.object({
   spo2Fio2: nullableNumber,
 });
 
+const viralHepatitisSchema = z.object({
+  hbvDnaLogIU: nullableNumber,
+  hbvDnaDetected: triState,
+  hbeAg: triState,
+  hbsAg: triState,
+  hbsAb: triState,
+  hbcAb: triState,
+  igmHbcAbIndex: nullableNumber,
+  hbcrAgLogU: nullableNumber,
+  fibrosisF2Plus: triState,
+  hccFamilyHistory: triState,
+  renalBoneRisk: triState,
+  hcvRnaDetected: triState,
+  hcvGenotype: z.enum(["1", "2", "mixed12", "other", "unknown"]),
+  hcvTreatmentHistory: z.enum([
+    "none",
+    "ifnProteaseFailure",
+    "ifnFreeDaaFailure",
+    "unknown",
+  ]),
+  p32Deletion: triState,
+});
+
 const assessmentSchema = z.object({
   id: z.string().min(1),
   label: z.string(),
@@ -104,6 +129,7 @@ const assessmentSchema = z.object({
     ]),
   }),
   liverFailure: liverFailureSchema,
+  viralHepatitis: viralHepatitisSchema,
   selectedClinicalContexts: z.array(z.string()),
   note: z.string(),
 });
@@ -119,7 +145,7 @@ const medicationSchema = z.object({
 });
 
 const caseSchema = z.object({
-  schemaVersion: z.literal(4),
+  schemaVersion: z.literal(5),
   id: z.string().min(1),
   caseCode: z.string().min(1),
   demographics: z.object({
@@ -199,8 +225,12 @@ export function migrateCase(raw: unknown): CaseRecord {
   if (!raw || typeof raw !== "object")
     throw new Error("症例データの形式が不正です。");
   const value = structuredClone(raw) as Record<string, unknown>;
-  if (value.schemaVersion === 4) return value as unknown as CaseRecord;
-  if (value.schemaVersion !== 2 && value.schemaVersion !== 3)
+  if (value.schemaVersion === 5) return value as unknown as CaseRecord;
+  if (
+    value.schemaVersion !== 2 &&
+    value.schemaVersion !== 3 &&
+    value.schemaVersion !== 4
+  )
     throw new Error("未対応のschema versionです。");
   const assessments = Array.isArray(value.assessments) ? value.assessments : [];
   const medications = Array.isArray(value.medications) ? value.medications : [];
@@ -229,6 +259,10 @@ export function migrateCase(raw: unknown): CaseRecord {
         liverFailure: {
           ...emptyLiverFailure(),
           ...(assessment.liverFailure as object | undefined),
+        },
+        viralHepatitis: {
+          ...emptyViralHepatitis(),
+          ...(assessment.viralHepatitis as object | undefined),
         },
         age:
           typeof assessment.age === "number"
@@ -289,7 +323,8 @@ export function validateBackup(text: string): Backup {
   if (
     source.schemaVersion !== 2 &&
     source.schemaVersion !== 3 &&
-    source.schemaVersion !== 4
+    source.schemaVersion !== 4 &&
+    source.schemaVersion !== 5
   ) {
     throw new Error("未対応のschema versionです。");
   }
@@ -302,7 +337,7 @@ export function validateBackup(text: string): Backup {
       throw new Error("バックアップ内で症例整理番号が重複しています。");
     }
     return {
-      schemaVersion: 4,
+      schemaVersion: SCHEMA_VERSION,
       appVersion: String(source.appVersion ?? "legacy"),
       exportedAt: String(source.exportedAt ?? new Date().toISOString()),
       facilities,
