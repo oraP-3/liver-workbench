@@ -11,7 +11,9 @@ test("架空ALD症例の主要画面を操作してスクリーンショット�
   await page.getByRole("button", { name: "症例一覧" }).click();
   await page.getByRole("button", { name: "JAS・MDF・Lille確認用ALD" }).click();
   await page.getByRole("tab", { name: "ALD 2022" }).click();
-  await expect(page.getByRole("heading", { name: "JAS" })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "JAS", exact: true }),
+  ).toBeVisible();
   await expect(page.getByText("15点", { exact: true })).toBeVisible();
   if (testInfo.project.name.includes("mobile")) {
     await page.getByRole("button", { name: "入力を閉じる" }).click();
@@ -58,6 +60,7 @@ test("HBVとHCVの治療参照画面を確認できる", async ({ page }, testIn
     page.getByText("治療対象の数値条件に対応", { exact: true }),
   ).toBeVisible();
   await page.getByRole("button", { name: "症例一覧" }).click();
+  page.once("dialog", (dialog) => dialog.accept());
   await page
     .getByRole("button", { name: "HCV非代償性肝硬変・DAA候補" })
     .click();
