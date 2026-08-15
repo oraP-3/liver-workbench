@@ -249,7 +249,7 @@ export function App() {
       <footer className="app-footer">
         <span>ver {__APP_VERSION__}</span>
         <span>commit {__COMMIT_SHA__}</span>
-        <span>ガイドライン確認日 2026-08-14</span>
+        <span>ガイドライン確認日 2026-08-15</span>
       </footer>
 
       {modal === "cases" && (

@@ -21,8 +21,8 @@ const codespaceHost =
     ? `${process.env.CODESPACE_NAME}-5173.${process.env.GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}`
     : undefined;
 
-export default defineConfig(({ command }) => {
-  const base = command === "build" ? "/liver-workbench/" : "/";
+export default defineConfig(({ command, isPreview }) => {
+  const base = command === "build" || isPreview ? "/liver-workbench/" : "/";
   return {
     base,
     server: {
